@@ -1,0 +1,18 @@
+---
+- name: testing stat n path 
+  hosts: localhost
+  become_user: root
+  become: true
+  tasks:
+  - name: testing some is exist or not
+    ansible.builtin.stat:
+      path: /home/ec2-user/d1/multi_files.yaml
+    register: data
+  - name: file not exists
+    ansible.builtin.debug:
+      msg: "doesn't exist"
+    when: not data.stat.exists
+  - name: file exists
+    ansible.builtin.debug:
+      msg: "exist"
+    when: data.stat.exists

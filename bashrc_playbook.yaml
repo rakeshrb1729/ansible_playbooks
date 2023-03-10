@@ -1,0 +1,21 @@
+---
+- name: run bash function from shell
+  hosts: u
+  remote_user: ubuntu
+  become_user: root
+  become: yes
+  tasks:
+  - name: make sure function is in bashrc
+    blockinfile:
+      dest: /home/ubuntu/.bashrc
+      block: |-
+          my_test_func() {
+            echo hello test func
+          }
+  - name: run the function from shell after sourcing .bashrc
+    shell: source /home/ubuntu/.bashrc && my_test_func
+    register: func_result
+
+  - name: check result
+    debug:
+      var: func_result.stdout

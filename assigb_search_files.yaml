@@ -1,0 +1,29 @@
+---
+- name: creating a files in d2
+  hosts: localhost
+  become_user: root
+  become: true
+  tasks:
+  - name: searching d2 directory
+    stat: 
+      path: /home/ec2-user/d2
+    register: dir_path
+  - name: creating new directory d2
+    file: path=/home/ec2-user/d2 state=directory
+    when: not dir_path.stat.exists
+  - name: checking files are exists in d2
+    stat:
+      path: /home/ec2-user/d2/file1
+    register: file_path
+  - name: creating new files in d2
+    file: path="{{ item }}" state=touch
+    with_items:
+    - '/home/ec2-user/d2/file1'
+    - '/home/ec2-user/d2/file2'
+    - '/home/ec2-user/d2/file3'
+    - '/home/ec2-user/d2/file4'
+    - '/home/ec2-user/d2/file5'
+    when: not file_path.stat.exists
+  - debug:
+      msg: "all files are already exists in d2"
+    when: file_path.stat.exists

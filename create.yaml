@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  become_user: root
+  tasks:
+  - name: create a file
+    file: path=/home/ec2-user/d1/file2 state=touch

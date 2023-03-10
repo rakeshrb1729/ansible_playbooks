@@ -1,0 +1,17 @@
+---
+- name: testing ansible facts distribution and os family
+  hosts: u
+  remote_user: ubuntu
+  become_user: root
+  become: true
+  tasks:
+  - name: installing apache in ubuntu and debian
+    apt:
+      name: apache2
+      state: latest
+    when: ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Debian"
+  - name: installing httpd in Redhat and CentOS
+    yum:
+      name: httpd
+      state: latest
+    when: ansible_facts['distribution'] == "CentOS" or ansible_facts['distribution'] == "RedHat"

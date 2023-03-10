@@ -1,0 +1,29 @@
+---
+- hosts: u
+  remote_user: ubuntu
+  become_user: root
+  become: yes
+  tasks:
+  - name: Stoping Tomcat service
+    service:
+      name: tomcat
+      state: stopped
+  - name: Copying war file
+    copy:
+      src: /home/enkins/apache-tomcat-9.0.70/webapps/SimpleWebApplication.war
+      dest: /home/ubuntu/backup
+      remote_src: yes
+  - name: Deleting war file
+    file:
+      path: /home/enkins/apache-tomcat-9.0.70/webapps/SimpleWebApplication.war
+      state: absent
+  - name: copying war file from nexus
+    get_url:
+      url: http://52.66.222.90:8081/repository/Javawebapp-snapshot/com/maven/SimpleWebApplication/1.0.2-SNAPSHOT/SimpleWebApplication-1.0.2-20230208.075803-1.war
+      dest: /home/enkins/apache-tomcat-9.0.70/webapps/
+      username: admin
+      password: admin123
+  - name: starting Tomcat service
+    service:
+      name: tomcat
+      state: started

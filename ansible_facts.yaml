@@ -1,0 +1,8 @@
+---
+- name: testing ansible facts distribution and os family
+  hosts: localhost
+  #remote_user: ubuntu
+  become_user: root
+  tasks:
+  - debug: 
+      var: ansible_facts['distribution']
